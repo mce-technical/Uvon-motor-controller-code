@@ -23,6 +23,8 @@
 #include "defines.h"
 #include "setup.h"
 #include "stm32f1xx_hal.h"
+#include <stdlib.h>
+#include <string.h>
 //#include "hd44780.h"
 
 void SystemClock_Config(void);
@@ -147,7 +149,7 @@ int main(void) {
 
 	int lastSpeedL = 0, lastSpeedR = 0;
 	int speedL = 0, speedR = 0;
-	float direction = 1;
+	//float direction = 1; doesn`t used in MCE implementation
 
 #ifdef CONTROL_PPM
 	PPM_Init();
@@ -161,7 +163,7 @@ int main(void) {
 #ifdef CONTROL_SERIAL_USART2
 	command.start_of_frame = 0;
 	UART_Control_Init();
-	HAL_UART_Receive_DMA(&huart2, &command, sizeof(command));
+	HAL_UART_Receive_DMA(&huart2, (uint8_t*)&command, sizeof(command));
 #endif
 
 #ifdef DEBUG_I2C_LCD
@@ -244,11 +246,11 @@ int main(void) {
 			} else if (wheel == 0b00000001) {
 				speedL = outputSpeed;
 			}
-
+			HAL_UART_Transmit(&huart2,(uint8_t*)&command,strlen((char*)&command),100);
 		} else {
 			if (main_loop_counter % 25 == 0) {
 				HAL_UART_DMAStop(&huart2);
-				HAL_UART_Receive_DMA(&huart2, &command, sizeof(command));
+				HAL_UART_Receive_DMA(&huart2,(uint8_t*)&command, sizeof(command));
 			}
 		}
 
@@ -383,6 +385,8 @@ int main(void) {
 		if (inactivity_timeout_counter >
 			(INACTIVITY_TIMEOUT * 60 * 1000) /
 				(DELAY_IN_MAIN_LOOP + 1)) { // rest of main loop needs maybe 1ms
+			char send_timeout[] = "TIMEOUT\n";
+			HAL_UART_Transmit(&huart2,(uint8_t*)send_timeout,strlen((const char*)send_timeout),100);
 			poweroff();
 		}
 
