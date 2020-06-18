@@ -1,0 +1,6 @@
+{
+    "stm32-for-vscode.openocdPath": "C:\\ST\\STM32CubeIDE_1.3.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltools.openocd.win32_1.3.0.202002181050\\tools\\bin\\openocd",
+    "cortex-debug.openocdPath": "C:\\ST\\STM32CubeIDE_1.3.0\\STM32CubeIDE\\plugins\\com.st.stm32cube.ide.mcu.externaltools.openocd.win32_1.3.0.202002181050\\tools\\bin\\openocd",
+    "stm32-for-vscode.makePath": "C:\\Program Files (x86)\\GnuWin32\\bin\\make",
+    "cortex-debug.armToolchainPath": ""
+}
